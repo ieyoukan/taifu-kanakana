@@ -1,0 +1,139 @@
+@import "tailwindcss";
+@import "@fontsource/zen-maru-gothic/400.css";
+@import "@fontsource/zen-maru-gothic/500.css";
+@import "@fontsource/zen-maru-gothic/700.css";
+@import "@fontsource/zen-maru-gothic/900.css";
+@import "@fontsource-variable/outfit";
+
+@theme {
+  --font-sans: "Zen Maru Gothic", "Hiragino Maru Gothic ProN", "Hiragino Sans", "Noto Sans JP", system-ui, sans-serif;
+  --font-display: "Outfit Variable", "Zen Maru Gothic", system-ui, sans-serif;
+
+  /* 室内（明るい・あたたかい） */
+  --color-cream: #FFF9F5;
+  --color-cream-2: #FFF2EC;
+  --color-ink: #1C2340;
+  --color-ink-2: #3A4262;
+  --color-muted: #6B7390;
+  --color-muted-2: #9AA1BA;
+  --color-line: #EFE7E3;
+  --color-line-2: #E3DAD6;
+
+  /* 恋 */
+  --color-love-100: #FFEAF0;
+  --color-love-200: #FFD1DE;
+  --color-love-300: #FFA9C1;
+  --color-love-400: #FF84A6;
+  --color-love-500: #FF5C8A;
+  --color-love-600: #E9456F;
+
+  /* 沖縄の海 */
+  --color-sea-100: #E3F7F9;
+  --color-sea-200: #BDEDF2;
+  --color-sea-300: #7DDCE6;
+  --color-sea-400: #3FC7D6;
+  --color-sea-500: #19B5C9;
+  --color-sea-600: #0E95A8;
+
+  /* 日差し・ろうそく */
+  --color-sun-100: #FFF4DC;
+  --color-sun-200: #FFE5B0;
+  --color-sun-300: #FFD27D;
+  --color-sun-400: #FFC05A;
+  --color-sun-500: #FFAD33;
+  --color-sun-600: #E8921A;
+
+  /* 嵐（外） */
+  --color-night-950: #070A1F;
+  --color-night-900: #0F1535;
+  --color-night-800: #1B2350;
+  --color-night-700: #273070;
+  --color-night-600: #35418F;
+
+  --shadow-soft: 0 10px 30px -14px rgba(28, 35, 64, 0.22);
+  --shadow-card: 0 14px 36px -18px rgba(28, 35, 64, 0.28);
+  --shadow-glow-love: 0 12px 32px -10px rgba(255, 92, 138, 0.55);
+  --shadow-glow-sea: 0 12px 32px -10px rgba(25, 181, 201, 0.5);
+  --shadow-nav: 0 -6px 30px -16px rgba(28, 35, 64, 0.25);
+
+  --animate-spin-slow: spin 28s linear infinite;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-pulse-soft: pulseSoft 2.4s ease-in-out infinite;
+  --animate-flicker: flicker 2.2s ease-in-out infinite;
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  @keyframes pulseSoft {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.05); }
+  }
+  @keyframes flicker {
+    0%, 100% { opacity: 1; transform: scale(1) translateY(0); }
+    20% { opacity: 0.85; transform: scale(0.98) translateY(1px); }
+    40% { opacity: 1; transform: scale(1.02) translateY(-1px); }
+    60% { opacity: 0.9; transform: scale(0.99) translateY(0); }
+    80% { opacity: 1; transform: scale(1.01) translateY(1px); }
+  }
+  @keyframes rain {
+    0% { background-position: 0 0, 0 0; }
+    100% { background-position: -40px 240px, -20px 180px; }
+  }
+}
+
+html, body, #root { height: 100%; margin: 0; }
+
+:root {
+  --sat: env(safe-area-inset-top, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+}
+@media (min-width: 768px) {
+  :root { --sat: 46px; --sab: 18px; }
+}
+
+body {
+  background: #070A1F;
+  color: #1C2340;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior: none;
+  -webkit-text-size-adjust: 100%;
+}
+
+* { -webkit-tap-highlight-color: transparent; }
+button { touch-action: manipulation; }
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+
+.font-display { font-family: var(--font-display); }
+
+/* 室内のガラス（白） */
+.glass {
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+/* 嵐側のガラス（暗） */
+.glass-dark {
+  background: rgba(15, 21, 53, 0.62);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.rain-layer {
+  pointer-events: none;
+  background-image:
+    repeating-linear-gradient(115deg, transparent 0 18px, rgba(255,255,255,0.10) 18px 19px, transparent 19px 42px),
+    repeating-linear-gradient(118deg, transparent 0 28px, rgba(255,255,255,0.06) 28px 29px, transparent 29px 60px);
+  background-size: 120px 260px, 160px 200px;
+  animation: rain 0.75s linear infinite;
+  mix-blend-mode: screen;
+}
+
+.text-balance { text-wrap: balance; }
+
+input, textarea { font-family: inherit; font-size: 16px; }

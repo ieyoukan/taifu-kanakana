@@ -1,0 +1,9 @@
+apiVersion: v2
+name: taifu-kanakana
+description: 台風の日、恋がかなう。沖縄発の期間限定マッチングアプリのモック（静的SPA）
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+maintainers:
+  - name: ieyoukan
+    url: https://github.com/ieyoukan
