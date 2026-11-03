@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { FEED_SEED, type Gender } from './data'
+import type { AvatarConfig } from './avatar'
 
 export type Phase = 'calm' | 'approach' | 'storm' | 'passed'
 
@@ -15,7 +16,7 @@ export type Msg = {
 
 export type Profile = {
   nickname: string
-  avatar: string
+  avatar: AvatarConfig
   city: string
   age: number
   hobbies: string[]
@@ -48,6 +49,9 @@ type State = {
   toasts: Toast[]
   dateProposed: Record<string, string>
   revealed: Record<string, boolean>
+  coins: number
+  owned: string[]
+  plus: boolean
 
   setProfile: (p: Profile) => void
   setPhase: (p: Phase) => void
@@ -67,6 +71,11 @@ type State = {
   dismissToast: (id: string) => void
   proposeDate: (pid: string, spot: string) => void
   reveal: (pid: string) => void
+  setAvatar: (a: AvatarConfig) => void
+  spendCoins: (n: number, keys: string[]) => boolean
+  addCoins: (n: number) => void
+  grant: (keys: string[]) => void
+  joinPlus: () => void
   reset: () => void
 }
 
@@ -74,7 +83,7 @@ const seedFeed = (): FeedItem[] =>
   FEED_SEED.map((f, i) => ({ ...f, id: `seed-${i}`, at: Date.now() - (i + 1) * 4 * 60 * 1000 }))
 
 const initial = {
-  profile: null,
+  profile: null as Profile | null,
   phase: 'approach' as Phase,
   blackout: false,
   reserved: false,
@@ -90,11 +99,14 @@ const initial = {
   toasts: [],
   dateProposed: {},
   revealed: {},
+  coins: 300,
+  owned: [] as string[],
+  plus: false,
 }
 
 export const useStore = create<State>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       ...initial,
       setProfile: (profile) => set({ profile }),
       setPhase: (phase) =>
@@ -125,10 +137,19 @@ export const useStore = create<State>()(
       dismissToast: (id) => set((s) => ({ toasts: s.toasts.filter((t) => t.id !== id) })),
       proposeDate: (pid, spot) => set((s) => ({ dateProposed: { ...s.dateProposed, [pid]: spot } })),
       reveal: (pid) => set((s) => ({ revealed: { ...s.revealed, [pid]: true } })),
+      setAvatar: (avatar) => set((s) => ({ profile: s.profile ? { ...s.profile, avatar } : s.profile })),
+      spendCoins: (n, keys) => {
+        if (get().coins < n) return false
+        set((s) => ({ coins: s.coins - n, owned: [...new Set([...s.owned, ...keys])] }))
+        return true
+      },
+      addCoins: (n) => set((s) => ({ coins: s.coins + n })),
+      grant: (keys) => set((s) => ({ owned: [...new Set([...s.owned, ...keys])] })),
+      joinPlus: () => set({ plus: true }),
       reset: () => set({ ...initial, feed: seedFeed() }),
     }),
     {
-      name: 'taifu-kanakana-v1',
+      name: 'taifu-kanakana-v2',
       partialize: (s) => ({
         profile: s.profile,
         phase: s.phase,
@@ -145,6 +166,9 @@ export const useStore = create<State>()(
         feed: s.feed,
         dateProposed: s.dateProposed,
         revealed: s.revealed,
+        coins: s.coins,
+        owned: s.owned,
+        plus: s.plus,
       }),
     },
   ),

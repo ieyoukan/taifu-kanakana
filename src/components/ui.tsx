@@ -2,7 +2,8 @@ import type { ButtonHTMLAttributes, ReactNode } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import { ChevronLeft, X } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import { avatarUrl } from '../lib/data'
+import { presetFor, type AvatarConfig } from '../lib/avatar'
+import { MaruAvatar } from './MaruAvatar'
 
 export function cn(...xs: Array<string | false | null | undefined>) {
   return xs.filter(Boolean).join(' ')
@@ -79,19 +80,12 @@ export function Tag({ children, tone = 'mist', className, dark }: { children: Re
   return <span className={cn('inline-flex items-center gap-1 h-6 px-2.5 rounded-full text-[11px] font-bold border whitespace-nowrap', dark ? onDark[tone] : light[tone], className)}>{children}</span>
 }
 
-const AVATAR_BG: Record<string, string> = {
-  sanpin: '#FFD6E0', goya: '#D7F5DC', shisa: '#FFE1A6', taco: '#FFD9B8', yoko: '#D9E4FF', mimi: '#F3D9FF', ren: '#CDEFF5', kai: '#CFE8FF',
-  nana: '#FFD6E0', sora: '#D9EEFF', umi: '#C9F0EC', hana: '#FFE0EC', rin: '#E8DFFF', koa: '#FFE7C7', yuna: '#FFD9D1', taku: '#D8F0D0', moe: '#F8D9F0',
-}
-
-export function Avatar({ seed, size = 48, ring, className, glow }: { seed: string; size?: number; ring?: Tone | 'white'; className?: string; glow?: boolean }) {
+export function Avatar({ seed, config, size = 48, ring, className, glow, animated }: { seed?: string; config?: AvatarConfig; size?: number; ring?: Tone | 'white'; className?: string; glow?: boolean; animated?: boolean }) {
   const rings = { love: 'ring-love-500', sea: 'ring-sea-500', sun: 'ring-sun-400', mist: 'ring-line-2', white: 'ring-white' }
+  const cfg = config ?? presetFor(seed ?? 'guest')
   return (
-    <div
-      className={cn('rounded-full overflow-hidden shrink-0', ring && `ring-[3px] ${rings[ring]}`, glow && 'shadow-glow-love', className)}
-      style={{ width: size, height: size, background: AVATAR_BG[seed] ?? '#FFD6E0' }}
-    >
-      <img src={avatarUrl(seed)} alt="" width={size} height={size} className="w-full h-full object-cover scale-[1.08] translate-y-[2px]" draggable={false} />
+    <div className={cn('rounded-full shrink-0', ring && `ring-[3px] ${rings[ring]}`, glow && 'shadow-glow-love', className)} style={{ width: size, height: size }}>
+      <MaruAvatar config={cfg} size={size} animated={animated} className="block" />
     </div>
   )
 }

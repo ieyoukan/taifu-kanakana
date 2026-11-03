@@ -22,7 +22,7 @@ export default function Continued() {
       <div className="relative flex-1 flex flex-col items-center justify-center px-8 text-center">
         <div className="flex items-center justify-center gap-0">
           <motion.div initial={{ x: -90, opacity: 0 }} animate={{ x: 10, opacity: 1 }} transition={{ type: 'spring', stiffness: 120, damping: 16, delay: 0.3 }}>
-            {profile && <Avatar seed={profile.avatar} size={96} ring="white" />}
+            {profile && <Avatar config={profile.avatar} size={96} ring="white" animated />}
           </motion.div>
           <motion.div initial={{ scale: 0, opacity: 0 }} animate={{ scale: [0, 1.3, 1], opacity: 1 }} transition={{ duration: 0.7, delay: 1.3 }} className="relative z-10 -mx-2">
             <div className="absolute inset-0 rounded-full bg-love-500/50 blur-2xl scale-150" />
@@ -31,7 +31,7 @@ export default function Continued() {
             </div>
           </motion.div>
           <motion.div initial={{ x: 90, opacity: 0 }} animate={{ x: -10, opacity: 1 }} transition={{ type: 'spring', stiffness: 120, damping: 16, delay: 0.3 }}>
-            <Avatar seed={partner.avatar} size={96} ring="white" />
+            <Avatar seed={partner.avatar} size={96} ring="white" animated />
           </motion.div>
         </div>
         <motion.div initial={{ y: 16, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 1.8, duration: 0.6 }}>

@@ -17,6 +17,7 @@ import Talks from './screens/Talks'
 import Me from './screens/Me'
 import Passed from './screens/Passed'
 import DatePlan from './screens/DatePlan'
+import Closet from './screens/Closet'
 
 function Guard({ children }: { children: ReactNode }) {
   const profile = useStore((s) => s.profile)
@@ -60,6 +61,7 @@ export default function App() {
           <Route path="/me" element={<Guard><Me /></Guard>} />
           <Route path="/passed" element={<Guard><Passed /></Guard>} />
           <Route path="/date/:id" element={<Guard><DatePlan /></Guard>} />
+          <Route path="/closet" element={<Guard><Closet /></Guard>} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </motion.div>

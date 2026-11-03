@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
-import { MapPin, Pencil, Lock, Eye, Sparkles, Flame, Tornado, LogOut, ChevronRight } from 'lucide-react'
+import { MapPin, Pencil, Lock, Eye, Sparkles, Flame, Tornado, LogOut, ChevronRight, Shirt, Crown } from 'lucide-react'
+import { CoinPill } from './Closet'
 import { Avatar, Button, Card, Chip, Screen, ScrollArea, SectionTitle, Tag } from '../components/ui'
 import { BottomNav } from '../components/chrome'
 import { useStore } from '../lib/store'
@@ -13,6 +14,9 @@ export default function Me() {
   const continued = useStore((s) => s.continued)
   const blackout = useStore((s) => s.blackout)
   const reset = useStore((s) => s.reset)
+  const plus = useStore((s) => s.plus)
+  const joinPlus = useStore((s) => s.joinPlus)
+  const pushToast = useStore((s) => s.pushToast)
   if (!profile) return null
 
   return (
@@ -26,7 +30,12 @@ export default function Me() {
       </div>
       <ScrollArea nav className="px-4 pt-1">
         <Card className="flex items-center gap-4">
-          <Avatar seed={profile.avatar} size={76} ring="love" />
+          <button onClick={() => nav('/closet')} className="relative shrink-0 active:scale-95">
+            <Avatar config={profile.avatar} size={84} ring="love" animated />
+            <span className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-ink text-white flex items-center justify-center ring-2 ring-white">
+              <Shirt size={15} />
+            </span>
+          </button>
           <div className="flex-1 min-w-0">
             <div className="font-black text-lg leading-tight">{profile.nickname}</div>
             <div className="text-xs text-muted mt-1 flex items-center gap-1">
@@ -35,9 +44,22 @@ export default function Me() {
             <div className="mt-2 flex gap-1.5 flex-wrap">
               <Tag tone="sea">本人確認済み</Tag>
               <Tag tone="love">{profile.purpose}</Tag>
+              {plus && (
+                <Tag tone="mist" className="!text-[#8A5CFF]">
+                  <Crown size={10} /> 嵐プラス
+                </Tag>
+              )}
             </div>
           </div>
         </Card>
+        <div className="mt-2 grid grid-cols-[1fr_auto] gap-2">
+          <button onClick={() => nav('/closet')} className="h-12 rounded-2xl bg-gradient-to-r from-love-500 to-sun-400 text-white font-bold text-[14px] flex items-center justify-center gap-2 shadow-glow-love active:scale-[0.98]">
+            <Shirt size={18} /> 着せかえ
+          </button>
+          <div className="h-12 px-2 rounded-2xl bg-white border border-line flex items-center">
+            <CoinPill onClick={() => nav('/closet')} />
+          </div>
+        </div>
 
         <SectionTitle>台風の日、何してる？</SectionTitle>
         <div className="flex flex-wrap gap-2">
@@ -110,7 +132,7 @@ export default function Me() {
           </button>
         </Card>
 
-        <SectionTitle right="検討中">嵐プラス</SectionTitle>
+        <SectionTitle right="収益化の例">嵐プラス</SectionTitle>
         <div className="rounded-[24px] p-4 bg-gradient-to-br from-night-900 to-night-700 text-white shadow-card">
           <div className="flex items-center gap-2">
             <Sparkles size={18} className="text-sun-300" />
@@ -120,20 +142,31 @@ export default function Me() {
             </div>
           </div>
           <div className="mt-3 grid grid-cols-1 gap-1.5 text-[12px] text-white/85">
+            <div>· プラス限定アバターパーツ（おうかん・ちゅら海・ほしぞら など）使い放題</div>
+            <div>· 毎月 100 コイン</div>
             <div>· 台風の目チケット：マッチング待ちを優先</div>
             <div>· ろうそく・雷のチャット装飾</div>
             <div>· 嵐の記録を無制限に保存</div>
             <div>· 台風明けデートのクーポン</div>
           </div>
-          <Button variant="sun" size="sm" className="mt-4">
-            くわしく見る
+          <Button
+            variant="sun"
+            size="sm"
+            className="mt-4"
+            disabled={plus}
+            onClick={() => {
+              joinPlus()
+              pushToast({ title: '嵐プラスに加入しました', body: 'モックのため実際の課金は発生しません。', tone: 'love' })
+            }}
+          >
+            {plus ? '加入中' : '加入する'}
           </Button>
         </div>
 
         <button
           onClick={() => {
             reset()
-            localStorage.removeItem('taifu-kanakana-v1')
+            localStorage.removeItem('taifu-kanakana-v2')
             nav('/')
           }}
           className="mt-6 mb-2 mx-auto flex items-center gap-1.5 text-xs text-muted font-bold"

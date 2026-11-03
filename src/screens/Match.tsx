@@ -45,7 +45,7 @@ export default function Match() {
     return () => t.forEach(clearTimeout)
   }, [state, cursor, partner.id, addMet])
 
-  const orbit = AVATARS.filter((a) => a !== profile?.avatar).slice(0, 8)
+  const orbit = AVATARS.slice(0, 8)
   const common = useMemo(() => {
     if (!profile) return []
     return [...profile.hobbies.filter((h) => partner.hobbies.includes(h)), ...profile.stormStyle.filter((h) => partner.stormStyle.includes(h))]
@@ -83,7 +83,7 @@ export default function Match() {
                   ))}
                 </motion.div>
                 <motion.div className="absolute w-44 h-44 rounded-full border border-white/15" animate={{ scale: [1, 1.5], opacity: [0.6, 0] }} transition={{ duration: 2, repeat: Infinity, ease: 'easeOut' }} />
-                {profile && <Avatar seed={profile.avatar} size={88} ring="love" glow />}
+                {profile && <Avatar config={profile.avatar} size={88} ring="love" glow animated />}
               </div>
               <motion.div key={cap} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="mt-4 text-center">
                 <div className="font-bold text-lg">{CAPTIONS[cap]}</div>
@@ -99,7 +99,7 @@ export default function Match() {
               </div>
               <div className="rounded-[30px] bg-white text-ink p-5 shadow-card">
                 <div className="flex flex-col items-center text-center">
-                  <Avatar seed={partner.avatar} size={104} ring="love" />
+                  <Avatar seed={partner.avatar} size={112} ring="love" animated />
                   <div className="mt-3 font-black text-[22px] leading-tight">{partner.name}</div>
                   <div className="text-xs text-muted mt-1 flex items-center gap-1">
                     <MapPin size={12} className="text-love-500" /> {partner.city} · {partner.age}歳 · 風速 {partner.wind}m/s

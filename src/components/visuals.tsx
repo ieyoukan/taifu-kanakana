@@ -233,7 +233,6 @@ export function PressureGauge({ index, pressure, className }: { index: number; p
     const y2 = cy + r * Math.sin(to)
     return `M${x1} ${y1} A${r} ${r} 0 ${to - from > Math.PI ? 1 : 0} 1 ${x2} ${y2}`
   }
-  const angle = start + (v / 100) * Math.PI
   return (
     <div className={cn('relative', className)}>
       <svg viewBox="0 0 180 100" className="w-full h-auto">
@@ -246,7 +245,9 @@ export function PressureGauge({ index, pressure, className }: { index: number; p
         </defs>
         <path d={arc(start, Math.PI * 2)} fill="none" stroke="#1C2340" strokeOpacity="0.08" strokeWidth="12" strokeLinecap="round" />
         <motion.path d={arc(start, Math.PI * 2)} fill="none" stroke={`url(#gauge-g-${uid})`} strokeWidth="12" strokeLinecap="round" initial={{ pathLength: 0 }} animate={{ pathLength: v / 100 }} transition={{ duration: 1.4, ease: 'easeOut' }} />
-        <motion.circle r="7" fill="#fff" stroke="#FF5C8A" strokeWidth="4" initial={{ cx: cx - r, cy }} animate={{ cx: cx + r * Math.cos(angle), cy: cy + r * Math.sin(angle) }} transition={{ duration: 1.4, ease: 'easeOut' }} />
+        <g style={{ transform: `rotate(${(v / 100) * 180}deg)`, transformOrigin: `${cx}px ${cy}px`, transformBox: 'view-box', transition: 'transform 1.4s cubic-bezier(0.2, 0.8, 0.2, 1)' }}>
+          <circle cx={cx - r} cy={cy} r="7" fill="#fff" stroke="#FF5C8A" strokeWidth="4" />
+        </g>
         <text x="20" y="98" fontSize="9" fill="#9AA1BA" fontWeight="700">1013hPa</text>
         <text x="160" y="98" fontSize="9" fill="#9AA1BA" fontWeight="700" textAnchor="end">940hPa</text>
       </svg>

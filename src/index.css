@@ -137,3 +137,19 @@ button { touch-action: manipulation; }
 .text-balance { text-wrap: balance; }
 
 input, textarea { font-family: inherit; font-size: 16px; }
+
+/* まるっこアバター */
+@keyframes maru-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2.5px); } }
+.maru-bob { animation: maru-bob 2.6s ease-in-out infinite; }
+@keyframes maru-blink { 0%, 92%, 100% { transform: scaleY(1); } 95% { transform: scaleY(0.1); } }
+.maru-blink { animation: maru-blink 4.2s infinite; transform-box: fill-box; transform-origin: center; }
+@keyframes maru-twinkle { 0%, 100% { opacity: 0.25; transform: scale(0.6); } 50% { opacity: 1; transform: scale(1); } }
+.maru-twinkle { animation: maru-twinkle 1.8s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+@keyframes maru-rise { 0% { transform: translateY(8px); opacity: 0; } 30% { opacity: 1; } 100% { transform: translateY(-20px); opacity: 0; } }
+.maru-rise { animation: maru-rise 2.4s ease-out infinite; transform-box: fill-box; transform-origin: center; }
+.maru-spin { animation: spin 6s linear infinite; transform-box: view-box; transform-origin: 50px 50px; }
+.maru-spin-slow { animation: spin 18s linear infinite reverse; transform-box: view-box; transform-origin: 50px 50px; }
+@keyframes maru-flash { 0%, 70%, 100% { opacity: 1; } 75% { opacity: 0.2; } 80% { opacity: 1; } 85% { opacity: 0.3; } }
+.maru-flash { animation: maru-flash 2.2s infinite; }
+@keyframes maru-flicker { 0%, 100% { transform: scale(1, 1); } 30% { transform: scale(0.92, 1.06); } 60% { transform: scale(1.05, 0.95); } }
+.maru-flicker { animation: maru-flicker 1.4s ease-in-out infinite; transform-box: fill-box; transform-origin: 50% 100%; }

@@ -20,8 +20,6 @@ export const AVATARS = [
   'sanpin', 'goya', 'shisa', 'taco', 'yoko', 'mimi', 'ren', 'kai', 'nana', 'sora', 'umi', 'hana', 'rin', 'koa', 'yuna', 'taku', 'moe',
 ] as const
 
-export const avatarUrl = (seed: string) => `/avatars/${seed}.svg`
-
 export const EVENT = {
   typhoon: '台風25号',
   area: '沖縄本島地方',

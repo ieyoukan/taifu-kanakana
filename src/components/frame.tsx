@@ -70,7 +70,7 @@ function RemoteBody({ onClose, light }: { onClose?: () => void; light?: boolean 
         <button
           onClick={() => {
             reset()
-            localStorage.removeItem('taifu-kanakana-v1')
+            localStorage.removeItem('taifu-kanakana-v2')
             nav('/')
             onClose?.()
           }}

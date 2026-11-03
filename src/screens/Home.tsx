@@ -218,6 +218,18 @@ export default function Home() {
           )}
         </motion.div>
 
+        {(isStorm || phase === 'approach') && profile && (
+          <motion.button initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }} onClick={() => nav('/closet')} className="mt-3 w-full text-left rounded-[24px] p-3 pr-4 flex items-center gap-3 bg-gradient-to-r from-night-900 to-night-700 text-white shadow-card active:scale-[0.99]">
+            <Avatar config={{ ...profile.avatar, head: 'hood', bg: 'storm', fx: 'thunder' }} size={68} animated />
+            <div className="flex-1 min-w-0">
+              <Tag dark tone="love">{EVENT.typhoon}限定</Tag>
+              <div className="font-black text-[15px] mt-1 leading-tight">レインコートとかみなり、配信中</div>
+              <div className="text-[11px] text-white/60 mt-0.5">台風が過ぎると、もう手に入りません</div>
+            </div>
+            <ChevronRight size={18} className="text-white/60" />
+          </motion.button>
+        )}
+
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.16 }}>
           <SectionTitle right={w.label}>恋愛気圧計</SectionTitle>
           <Card>

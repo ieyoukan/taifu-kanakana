@@ -3,7 +3,8 @@ import { AnimatePresence, motion } from 'motion/react'
 import { useNavigate } from 'react-router-dom'
 import { Dices, ScanLine, CheckCircle2, MapPin, ShieldCheck } from 'lucide-react'
 import { Avatar, Button, Card, Chip, Screen, TopBar, cn } from '../components/ui'
-import { AVATARS, HOBBIES, NICKNAMES, STORM_STYLES, EVENT } from '../lib/data'
+import { HOBBIES, NICKNAMES, STORM_STYLES, EVENT } from '../lib/data'
+import { DEFAULT_AVATAR, partsBySlot, randomAvatar, BODY_COLORS, type AvatarConfig, type Slot } from '../lib/avatar'
 import { useStore } from '../lib/store'
 import type { Gender } from '../lib/data'
 
@@ -21,7 +22,7 @@ export default function Signup() {
   const [year, setYear] = useState(existing ? String(2026 - existing.age) : '')
   const [scan, setScan] = useState<'idle' | 'scanning' | 'done'>(existing?.verified ? 'done' : 'idle')
   const [nickname, setNickname] = useState(existing?.nickname ?? '')
-  const [avatar, setAvatar] = useState(existing?.avatar ?? 'sanpin')
+  const [avatar, setAvatar] = useState<AvatarConfig>(existing?.avatar ?? DEFAULT_AVATAR)
   const [hobbies, setHobbies] = useState<string[]>(existing?.hobbies ?? [])
   const [styles, setStyles] = useState<string[]>(existing?.stormStyle ?? [])
   const [pref, setPref] = useState<Gender>(existing?.pref ?? 'any')
@@ -109,8 +110,8 @@ export default function Signup() {
 
             {step === 1 && (
               <div>
-                <h2 className="text-[26px] font-black leading-tight">嵐の中での、名前。</h2>
-                <p className="mt-2 text-muted text-sm leading-relaxed">本名はいりません。台風っぽい名前がおすすめです。</p>
+                <h2 className="text-[26px] font-black leading-tight">嵐の中での、名前と顔。</h2>
+                <p className="mt-2 text-muted text-sm leading-relaxed">本名も写真もいりません。台風っぽい名前と、まるっこアバターで。</p>
                 <div className="mt-6 flex gap-2">
                   <input value={nickname} onChange={(e) => setNickname(e.target.value.slice(0, 12))} placeholder="ニックネーム" className={cn(inputCls, 'flex-1 text-lg')} />
                   <button onClick={() => setNickname(NICKNAMES[Math.floor(Math.random() * NICKNAMES.length)])} className="w-14 h-14 rounded-2xl bg-sun-100 border border-sun-200 flex items-center justify-center text-sun-600 active:scale-95" aria-label="おまかせ">
@@ -118,21 +119,44 @@ export default function Signup() {
                   </button>
                 </div>
                 <div className="mt-1.5 text-[11px] text-muted">サイコロで「台風っぽい名前」をおまかせ</div>
-                <div className="mt-6 text-xs font-bold text-muted">アバターを選ぶ</div>
-                <div className="mt-3 grid grid-cols-5 gap-3">
-                  {AVATARS.map((a) => (
-                    <button key={a} onClick={() => setAvatar(a)} className={cn('rounded-full transition-transform active:scale-95', avatar === a ? 'ring-[3px] ring-love-500 scale-105' : 'opacity-80')}>
-                      <Avatar seed={a} size={56} />
+                <div className="mt-6 rounded-[28px] bg-gradient-to-b from-love-100 via-sun-100/60 to-white border border-line p-4 flex items-center gap-4">
+                  <Avatar config={avatar} size={104} animated className="shadow-card rounded-full" />
+                  <div className="flex-1 min-w-0">
+                    <div className="font-black text-lg truncate">{nickname || 'ニックネーム'}</div>
+                    <div className="text-xs text-muted">那覇市 · {age}歳 · 匿名で表示</div>
+                    <button onClick={() => setAvatar(randomAvatar(`${Date.now()}`, { freeOnly: true }))} className="mt-2 h-8 px-3 rounded-full bg-white border border-line text-[12px] font-bold text-ink-2 inline-flex items-center gap-1 active:scale-95">
+                      <Dices size={14} className="text-sun-600" /> おまかせ
                     </button>
-                  ))}
-                </div>
-                <Card className="mt-6 flex items-center gap-3 p-3">
-                  <Avatar seed={avatar} size={52} ring="love" />
-                  <div>
-                    <div className="font-bold">{nickname || 'ニックネーム'}</div>
-                    <div className="text-xs text-muted">那覇市 · {age}歳 · 匿名で表示されます</div>
                   </div>
-                </Card>
+                </div>
+                <div className="mt-5 text-xs font-bold text-muted">いろ</div>
+                <div className="mt-2 flex gap-2.5 overflow-x-auto no-scrollbar -mx-5 px-5 pb-1">
+                  {partsBySlot('body')
+                    .filter((p) => p.tier === 'free')
+                    .map((p) => {
+                      const st = BODY_COLORS[p.id]
+                      return (
+                        <button key={p.id} onClick={() => setAvatar({ ...avatar, body: p.id })} aria-label={p.name} className={cn('shrink-0 w-11 h-11 rounded-full border-[3px] transition-transform active:scale-90', avatar.body === p.id ? 'border-ink scale-105' : 'border-white shadow-soft')} style={{ background: `linear-gradient(160deg, ${st.join(', ')})` }} />
+                      )
+                    })}
+                </div>
+                {(['eyes', 'head', 'item'] as Slot[]).map((slot) => (
+                  <div key={slot}>
+                    <div className="mt-4 text-xs font-bold text-muted">{{ eyes: 'かお', head: 'あたま', item: 'もちもの' }[slot as 'eyes' | 'head' | 'item']}</div>
+                    <div className="mt-2 flex gap-2 overflow-x-auto no-scrollbar -mx-5 px-5 pb-1">
+                      {partsBySlot(slot)
+                        .filter((p) => p.tier === 'free')
+                        .map((p) => (
+                          <button key={p.id} onClick={() => setAvatar({ ...avatar, [slot]: p.id })} className={cn('shrink-0 rounded-full transition-transform active:scale-95', avatar[slot] === p.id ? 'ring-[3px] ring-love-500' : 'opacity-85')}>
+                            <Avatar config={{ ...avatar, [slot]: p.id }} size={56} />
+                          </button>
+                        ))}
+                    </div>
+                  </div>
+                ))}
+                <div className="mt-4 rounded-2xl bg-sun-100 border border-sun-200 px-3 py-2.5 text-[12px] text-ink-2 leading-relaxed">
+                  もっと可愛いパーツ（ゴールド・おうかん・台風限定のレインコートなど）は、あとで「着せかえ」から手に入ります。
+                </div>
               </div>
             )}
 
